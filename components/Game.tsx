@@ -5,10 +5,11 @@ import { Card } from './Card'
 import { Header } from './Header'
 import { Scoreboard } from './Scoreboard'
 import { TimeUpPopup } from './TimeUpPopup'
+import { GameOverPopup } from './GameOverPopup'
 
 type Team = 'red' | 'blue' | 'neutral' | 'assassin'
 
-const words = [
+/* const words = [
 "AIRPLANE", "ANCHOR", "ANGEL", "ANT", "APPLE", "ARM", "ARMY", "ASH", "ASTRONAUT", "BABY",
 "BALLOON", "BAND", "BANK", "BAR", "BARK", "BARREL", "BASE", "BASKET", "BATH", "BATTERY",
 "BEACH", "BEAR", "BED", "BEE", "BELL", "BELT", "BENCH", "BERRY", "BIRD", "BISCUIT",
@@ -39,7 +40,101 @@ const words = [
 "TREE", "TRUCK", "TUNNEL", "UMBRELLA", "UNICORN", "VALLEY", "VASE", "VILLAGE", "VOLCANO", "WAGON",
 "WALL", "WATCH", "WATER", "WHALE", "WHEEL", "WHISTLE", "WINDOW", "WING", "WITCH", "WOLF",
 "WOOD", "WORM", "YACHT", "YARD", "ZEBRA", "ZIPPER"
+] */
+const words = [
+  "iPod",
+  "Myspace",
+  "Flip Phone",
+  "Planking",
+  "Twilight",
+  "Blackberry",
+  "Dubstep",
+  "Snooki",
+  "Shutter Shades",
+  "Vine",
+  "Guitar Hero",
+  "Tumblr",
+  "Duckface",
+  "Nyan Cat",
+  "Livestrong",
+  "Harlem Shake",
+  "Angry Birds",
+  "Paris Hilton",
+  "Charlie Bit Me",
+  "YOLO",
+  "Call Me Maybe",
+  "Razor Scooter",
+  "Farmville",
+  "Avatar",
+  "Silly Bands",
+  "Crocs",
+  "Justin Bieber",
+  "High School Musical",
+  "Bop It",
+  "Napster",
+  "Twerk",
+  "Ed Hardy",
+  "Rebecca Black",
+  "Wii",
+  "TikTok (Kesha)",
+  "One Direction",
+  "Skrillex",
+  "Hollister",
+  "Team Edward",
+  "Shrek",
+  "Sidekick",
+  "Pokemon Cards",
+  "Froyo",
+  "Zune",
+  "Lady Gaga",
+  "Kanye",
+  "Scene Hair",
+  "Selfie Stick",
+  "Bieber Fever",
+  "Hannah Montana",
+  "LimeWire",
+  "Facebook Pokes",
+  "The Jonas Brothers",
+  "Rock Band",
+  "Avatar (Last Airbender)",
+  "Twinkies",
+  "Paris Hilton",
+  "The Situation",
+  "Flash Mobs",
+  "Bedazzler",
+  "Furbies",
+  "Hot Topic",
+  "Camp Rock",
+  "Gangnam Style",
+  "Uggs",
+  "The Hunger Games",
+  "Vuvuzela",
+  "Bluetooth Headset",
+  "Macarena",
+  "Jersey Shore",
+  "TikTok Pants",
+  "Mini Clip",
+  "Cheeky Nandos",
+  "PSP",
+  "Charlie Sheen",
+  "Breaking Bad",
+  "Mean Girls",
+  "Napoleon Dynamite",
+  "SpongeBob Memes",
+  "Hashtag",
+  "iPhone 4",
+  "Twilight Zone",
+  "Scene Queens",
+  "Katy Perry",
+  "Planking Challenges",
+  "The Office",
+  "Crocs",
+  "Tumblr Quotes",
+  "Twilight Series",
+  "Harry Potter Fan Fiction"
 ]
+
+
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   const shuffled = [...array]
@@ -81,6 +176,7 @@ export const Game: React.FC = () => {
   const [timerDuration, setTimerDuration] = useState(180) // 3 minutes
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [isTimeUpPopupOpen, setIsTimeUpPopupOpen] = useState(false)
+  const [isGameOverPopupOpen, setIsGameOverPopupOpen] = useState(false)
 
   const handleCardClick = useCallback((index: number) => {
     if (gameState.revealed[index] || isSpymasterView) return
@@ -91,6 +187,11 @@ export const Game: React.FC = () => {
 
       const newRedScore = prevState.teams[index] === 'red' ? prevState.redScore - 1 : prevState.redScore
       const newBlueScore = prevState.teams[index] === 'blue' ? prevState.blueScore - 1 : prevState.blueScore
+
+      // Check if assassin was revealed
+      if (prevState.teams[index] === 'assassin') {
+        setTimeout(() => setIsGameOverPopupOpen(true), 500)
+      }
 
       return {
         ...prevState,
@@ -164,14 +265,16 @@ export const Game: React.FC = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pt-20" style={{ minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
-      <Header 
-        isSpymasterView={isSpymasterView}
-        onToggleSpymasterView={toggleSpymasterView}
-        onNewGame={startNewGame}
-      />
-      <div className="container mx-auto px-4 sm:px-6 py-3">
-        <Scoreboard 
+    <div className="h-screen bg-gray-100 dark:bg-gray-900 flex flex-col">
+      <div className="flex-none">
+        <Header
+          isSpymasterView={isSpymasterView}
+          onToggleSpymasterView={toggleSpymasterView}
+          onNewGame={startNewGame}
+        />
+      </div>
+      <div className="flex-none container mx-auto px-4 sm:px-6 py-1">
+        <Scoreboard
           currentTeam={gameState.currentTeam}
           redScore={gameState.redScore}
           blueScore={gameState.blueScore}
@@ -183,8 +286,8 @@ export const Game: React.FC = () => {
           onDurationChange={setTimerDuration}
         />
       </div>
-      <main className="container mx-auto px-4 sm:px-6 py-4 overflow-x-hidden">
-        <div className="grid grid-cols-5 gap-2 sm:gap-4">
+      <main className="flex-1 container mx-auto px-4 sm:px-6 pb-2 flex items-center min-h-0">
+        <div className="w-full h-full grid grid-cols-5 gap-1.5 sm:gap-2">
           {gameState.words.map((word, index) => (
             <Card
               key={index}
@@ -197,11 +300,20 @@ export const Game: React.FC = () => {
           ))}
         </div>
       </main>
-      <TimeUpPopup
-        isOpen={isTimeUpPopupOpen}
-        onClose={closeTimeUpPopup}
-        currentTeam={gameState.currentTeam}
-      />
+      {isTimeUpPopupOpen && (
+        <TimeUpPopup
+          isOpen={isTimeUpPopupOpen}
+          onClose={closeTimeUpPopup}
+          currentTeam={gameState.currentTeam}
+        />
+      )}
+      {isGameOverPopupOpen && (
+        <GameOverPopup
+          isOpen={isGameOverPopupOpen}
+          onNewGame={startNewGame}
+          losingTeam={gameState.currentTeam}
+        />
+      )}
     </div>
   )
 }

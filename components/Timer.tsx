@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Pause, Play, RotateCcw } from 'lucide-react'
+import { Pause, Play, RotateCcw, Pen } from 'lucide-react'
 
 interface TimerProps {
   duration: number
@@ -60,10 +60,11 @@ export const Timer: React.FC<TimerProps> = ({
   return (
     <div className="relative flex items-center space-x-4">
       <div 
-        className="text-3xl font-bold cursor-pointer" 
+        className="text-3xl font-bold cursor-pointer flex items-center gap-2" 
         onClick={() => setShowPopup(true)}
       >
         {formatTime(timeLeft)}
+        <Pen size={16} className="text-gray-500" />
       </div>
       <button
         onClick={onToggleTimer}

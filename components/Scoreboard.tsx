@@ -25,9 +25,9 @@ export const Scoreboard: React.FC<ScoreboardProps> = ({
   onDurationChange
 }) => {
   return (
-    <div className="bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-4 max-w-xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-12">
-        <div className="flex gap-8 text-4xl sm:text-5xl font-bold">
+    <div className="bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-2 max-w-xl mx-auto">
+      <div className="flex flex-row justify-center items-center gap-4 sm:gap-8">
+        <div className="flex gap-6 text-3xl sm:text-4xl font-bold">
           <span className={`${currentTeam === 'red' ? 'text-red-600 dark:text-red-500' : 'text-red-400 dark:text-red-400'}`}>{redScore}</span>
           <span className={`${currentTeam === 'blue' ? 'text-blue-600 dark:text-blue-500' : 'text-blue-400 dark:text-blue-400'}`}>{blueScore}</span>
         </div>

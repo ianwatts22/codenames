@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 interface CardProps {
   word: string
@@ -9,7 +9,18 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ word, revealed, team, onClick, isSpymasterView }) => {
-  const baseClasses = "w-full aspect-[3/2] rounded-lg shadow-lg flex items-center justify-center text-center p-1 text-xl sm:text-2xl md:text-2xl lg:text-2xl xl:text-2xl font-bold transition-all duration-300 cursor-pointer break-words"
+  const [isAssassinRevealed, setIsAssassinRevealed] = useState(false)
+  
+  useEffect(() => {
+    if (revealed && team === 'assassin') {
+      setIsAssassinRevealed(true)
+      // Reset the animation after it completes
+      const timer = setTimeout(() => setIsAssassinRevealed(false), 500)
+      return () => clearTimeout(timer)
+    }
+  }, [revealed, team])
+
+  const baseClasses = "w-full aspect-[3/2] rounded-lg shadow-lg flex items-center justify-center text-center p-1 text-[11px] sm:text-sm md:text-base lg:text-lg font-bold transition-all duration-300 cursor-pointer break-words hover:scale-[1.02]"
   
   const getTeamClasses = () => {
     const teamColors = {
@@ -22,7 +33,7 @@ export const Card: React.FC<CardProps> = ({ word, revealed, team, onClick, isSpy
     return teamColors[team]
   }
 
-  const cardClass = `${baseClasses} ${getTeamClasses()} ${isSpymasterView && !revealed ? 'opacity-70' : ''}`
+  const cardClass = `${baseClasses} ${getTeamClasses()} ${isSpymasterView && !revealed ? 'opacity-70' : ''} ${isAssassinRevealed ? 'scale-125 z-10' : ''}`
 
   return (
     <div className={cardClass} onClick={onClick}>
